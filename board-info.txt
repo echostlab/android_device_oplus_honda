@@ -1,1 +1,0 @@
-require board=degas|2406APNFAG
