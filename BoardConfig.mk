@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/degas
+DEVICE_PATH := device/oneplus/honda
 
 # Architecture
 TARGET_ARCH := arm64
@@ -35,20 +35,19 @@ TARGET_IS_64_BIT := true
 TARGET_USES_64_BIT_BINDER := true
 TARGET_BOARD_SUFFIX := _64
 
-# Board
-TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
-
 # Power
 ENABLE_CPUSETS := true
 ENABLE_SCHEDBOOST := true
 
+# APEX
+OVERRIDE_TARGET_FLATTEN_APEX := true
+
 # Assertion
-TARGET_OTA_ASSERT_DEVICE := degas
+TARGET_OTA_ASSERT_DEVICE := honda
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := mt6897
 TARGET_NO_BOOTLOADER := true
-TARGET_USES_UEFI := true
 
 # Build Hack
 BUILD_BROKEN_DUP_RULES := true
