@@ -14,15 +14,21 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/degas
+DEVICE_PATH := device/oneplus/honda
 
 # Inherit from device.mk configuration
 $(call inherit-product, $(DEVICE_PATH)/device.mk)
 
 # Device identifier
-PRODUCT_DEVICE := degas
-PRODUCT_NAME := twrp_degas
-PRODUCT_BRAND := Xiaomi
-PRODUCT_MODEL := 2406APNFAG
-PRODUCT_MANUFACTURER := Xiaomi
-PRODUCT_RELEASE_NAME := Xiaomi 14T
+PRODUCT_DEVICE := honda
+PRODUCT_NAME := twrp_honda
+PRODUCT_BRAND := OnePlus
+PRODUCT_MODEL := CPH2719
+PRODUCT_MANUFACTURER := oneplus
+
+PRODUCT_GMS_CLIENTID_BASE := android-oneplus
+
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRIVATE_BUILD_DESC="CPH2719-user 16 BP2A.250605.015 V.553e72d-31fdb1c-31fdb1a release-keys"
+
+BUILD_FINGERPRINT := OnePlus/CPH2719/OP613BL1:16/BP2A.250605.015/V.553e72d-31fdb1c-31fdb1a:user/release-keys
