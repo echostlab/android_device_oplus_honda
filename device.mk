@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/degas
+DEVICE_PATH := device/oneplus/honda
 
 # Configure base.mk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
@@ -25,8 +25,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 # Configure Virtual A/B
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
-# Configure virtual_ab_ota compression_with_xor.mk
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression_with_xor.mk)
+# Configure virtual_ab_ota compression.mk
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
 
 # Configure emulated_storage.mk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
@@ -36,6 +36,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_ven
 
 # Configure twrp common.mk
 $(call inherit-product, vendor/twrp/config/common.mk)
+
+$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 34
@@ -51,47 +53,50 @@ PRODUCT_PROPERTY_OVERRIDES += ro.twrp.vendor_boot=true
 AB_OTA_UPDATER := true
 ENABLE_VIRTUAL_AB := true
 TARGET_ENFORCE_AB_OTA_PARTITION_LIST := true
-AB_OTA_PARTITIONS += \
-    apusys \
-    audio_dsp \
+AB_OTA_PARTITIONS := \
     boot \
-    ccu \
-    connsys_bt \
-    connsys_gnss \
-    connsys_wifi \
-    countrycode \
-    dpm \
+    vendor_boot \
     dtbo \
-    gpueb \
-    gz \
-    init_boot \
-    lk \
-    logo \
-    mcf_ota \
-    mcupm \
-    mi_ext \
-    modem \
-    mvpu_algo \
-    odm \
-    odm_dlkm \
-    pi_img \
-    preloader_raw \
-    product \
-    pvmfw \
-    scp \
-    spmfw \
-    sspm \
-    system \
-    system_dlkm \
-    system_ext \
-    tee \
     vbmeta \
     vbmeta_system \
     vbmeta_vendor \
-    vcp \
+    system \
+    system_ext \
+    product \
     vendor \
-    vendor_boot \
-    vendor_dlkm
+    odm \
+    odm_dlkm \
+    vendor_dlkm \
+    lk \
+    preloader_raw \
+    md1img \
+    audio_dsp \
+    apusys \
+    tee \
+    mcupm \
+    spmfw \
+    sspm \
+    ccu \
+    scp \
+    vcp \
+    gz \
+    dpm \
+    gpu_eb \
+    mvpu_algo \
+    mcf_ota \
+
+# AB partitions for oplus
+AB_OTA_PARTITIONS += \
+    my_bigball \
+    my_carrier \
+    my_company \
+    my_engineering \
+    my_heytap \
+    my_manifest \
+    my_preload \
+    my_product \
+    my_region \
+    my_stock
 
 PRODUCT_PACKAGES += \
     update_engine \
@@ -106,15 +111,26 @@ AB_OTA_POSTINSTALL_CONFIG += \
     POSTINSTALL_OPTIONAL_system=true
 
 AB_OTA_POSTINSTALL_CONFIG += \
+    RUN_POSTINSTALL_system=true \
+    POSTINSTALL_PATH_system=system/bin/otapreopt_script \
+    FILESYSTEM_TYPE_system=ext4 \
+    POSTINSTALL_OPTIONAL_system=true
+
+AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_vendor=true \
     POSTINSTALL_PATH_vendor=bin/checkpoint_gc \
     FILESYSTEM_TYPE_vendor=erofs \
     POSTINSTALL_OPTIONAL_vendor=true
 
-# Bootctrl
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery
+    android.hardware.boot@1.2-service
+
+# Bootctrl
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.0 \
+    android.hardware.boot@1.1 \
+    android.hardware.boot@1.2
 
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
@@ -127,6 +143,16 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
 
+PRODUCT_PACKAGES += \
+    fastbootd \
+    android.hardware.fastboot@1.0 \
+    android.hardware.fastboot@1.1
+
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0 \
+    android.hardware.keymaster@4.0 \
+    android.hardware.keymaster@4.1
+
 # Crypto / KeyMint
 PRODUCT_PACKAGES += \
     android.hardware.security.keymint-V3-ndk \
@@ -138,14 +164,13 @@ PRODUCT_PACKAGES += \
     android.hardware.security.sharedsecret-V1-ndk \
     android.hardware.security.sharedsecret-V1-ndk.recovery
 
+PRODUCT_PACKAGES += \
+    wait_for_keymaster
+
 # Mtk plpath utils
 PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery
-
-# Otacert
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    $(DEVICE_PATH)/security/miui_releasekey
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)
